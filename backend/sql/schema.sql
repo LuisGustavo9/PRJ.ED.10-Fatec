@@ -1,0 +1,18 @@
+CREATE EXTENSION IF NOT EXISTS postgis;
+
+CREATE TABLE IF NOT EXISTS cidades (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    geom GEOGRAPHY(Point, 4326) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS rotas (
+    id SERIAL PRIMARY KEY,
+    origem_id INT NOT NULL REFERENCES cidades(id) ON DELETE CASCADE,
+    destino_id INT NOT NULL REFERENCES cidades(id) ON DELETE CASCADE,
+    custo NUMERIC(10,2) NOT NULL,
+    tempo_min NUMERIC(10,2),
+    CHECK (origem_id <> destino_id)
+);
