@@ -7,7 +7,7 @@ export interface Cidade {
   longitude: number;
 }
 
-export async function listarCidades(): Promise<Cidade[]> {
+export async function listarCidades() {
   const { rows } = await pool.query(`
     SELECT id, nome, latitude, longitude
     FROM cidades

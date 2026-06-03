@@ -1,12 +1,19 @@
+import type { Cidade } from "../types/route";
+
 interface Props {
+  cidades: Cidade[];
+
   origem: string;
   destino: string;
-  setOrigem: (v: string) => void;
-  setDestino: (v: string) => void;
+
+  setOrigem: (value: string) => void;
+  setDestino: (value: string) => void;
+
   buscarRota: () => void;
 }
 
 export function RouteForm({
+  cidades,
   origem,
   destino,
   setOrigem,
@@ -17,20 +24,42 @@ export function RouteForm({
     <div>
       <h2>Consulta de Rotas</h2>
 
-      <div className="form-group">
+      <div>
         <label>Origem</label>
-        <input
+
+        <select
           value={origem}
           onChange={(e) => setOrigem(e.target.value)}
-        />
+        >
+          {cidades.map((cidade) => (
+            <option
+              key={cidade.id}
+              value={cidade.nome}
+            >
+              {cidade.nome}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="form-group">
+      <div>
         <label>Destino</label>
-        <input
+
+        <select
           value={destino}
           onChange={(e) => setDestino(e.target.value)}
-        />
+        >
+          {cidades
+            .filter((cidade) => cidade.nome !== origem)
+            .map((cidade) => (
+              <option
+                key={cidade.id}
+                value={cidade.nome}
+              >
+                {cidade.nome}
+              </option>
+            ))}
+        </select>
       </div>
 
       <button onClick={buscarRota}>

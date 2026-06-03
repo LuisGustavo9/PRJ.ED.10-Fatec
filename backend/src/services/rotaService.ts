@@ -24,7 +24,7 @@ export async function encontrarMelhorRota(
       {
         custo: rota.custo,
         distancia: rota.distancia_km,
-        tempo: rota.tempo
+        tempo: rota.tempo,
       },
       true
     );

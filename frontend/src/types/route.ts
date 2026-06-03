@@ -1,4 +1,5 @@
 export interface Cidade {
+  id: number;
   nome: string;
   latitude: number;
   longitude: number;
