@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-
 import { api } from "./services/api";
 
-import type {
-  Cidade,
-  ResultadoRota,
-} from "./types/route";
+import type { Cidade, ResultadoRota, RespostaRota } from "./types/route";
 
 import { RouteForm } from "./components/RouteForm";
 import { RouteInfo } from "./components/RouteInfo";
@@ -14,24 +10,17 @@ import { MapView } from "./components/MapView";
 import "./App.css";
 
 export default function App() {
-  const [cidades, setCidades] =
-    useState<Cidade[]>([]);
-
-  const [origem, setOrigem] =
-    useState("");
-
-  const [destino, setDestino] =
-    useState("");
-
-  const [rota, setRota] =
-    useState<ResultadoRota | null>(null);
+  const [cidades, setCidades] = useState<Cidade[]>([]);
+  const [origem, setOrigem] = useState("");
+  const [destino, setDestino] = useState("");
+  const [rota, setRota] = useState<ResultadoRota | null>(null);
+  const [rotasPossiveis, setRotasPossiveis] = useState<ResultadoRota[]>([]);
 
   useEffect(() => {
     async function carregarCidades() {
       try {
         const response = await api.get("/cidades");
-
-        const lista = response.data;
+        const lista: Cidade[] = response.data;
 
         setCidades(lista);
 
@@ -49,17 +38,17 @@ export default function App() {
 
   async function buscarRota() {
     try {
-      const response = await api.get("/rota", {
+      const response = await api.get<RespostaRota>("/rota", {
         params: {
           origem,
-          destino,
-        },
+          destino
+        }
       });
 
-      setRota(response.data);
+      setRota(response.data.melhorRota);
+      setRotasPossiveis(response.data.rotasPossiveis);
     } catch (error) {
       console.error(error);
-
       alert("Erro ao buscar rota");
     }
   }
@@ -80,7 +69,7 @@ export default function App() {
       </aside>
 
       <main>
-        <MapView rota={rota} />
+        <MapView rota={rota} rotasPossiveis={rotasPossiveis} />
       </main>
     </div>
   );

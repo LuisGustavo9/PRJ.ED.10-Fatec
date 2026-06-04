@@ -11,3 +11,8 @@ export interface ResultadoRota {
   distanciaTotal: number;
   tempoTotal: number;
 }
+
+export interface RespostaRota {
+  melhorRota: ResultadoRota;
+  rotasPossiveis: ResultadoRota[];
+}

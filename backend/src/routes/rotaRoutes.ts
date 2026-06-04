@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { encontrarMelhorRota } from "../services/rotaService";
+import { encontrarMelhorRota, encontrarRotasPossiveis } from "../services/rotaService";
 import { listarCidades } from "../repositorio/cidade";
 
 const router = Router();
@@ -15,45 +15,47 @@ router.get("/rota", async (req, res) => {
       });
     }
 
-    const resultado = await encontrarMelhorRota(
-      origem,
-      destino,
-      "custo"
-    );
-
     const cidades = await listarCidades();
-
     const cidadesPorNome = new Map(
       cidades.map((cidade) => [cidade.nome, cidade])
     );
 
-    const caminho = resultado.caminho.map((nomeCidade) => {
-      const cidade = cidadesPorNome.get(nomeCidade);
+    const melhorRotaBruta = await encontrarMelhorRota(origem, destino, "custo");
+    const rotasPossiveisBrutas = await encontrarRotasPossiveis(origem, destino, 10, 6);
 
-      if (!cidade) {
-        throw new Error(
-          `Cidade não encontrada: ${nomeCidade}`
-        );
-      }
+    const converterCaminho = (caminho: string[]) => {
+      return caminho.map((nomeCidade) => {
+        const cidade = cidadesPorNome.get(nomeCidade);
 
-      return {
-        nome: cidade.nome,
-        latitude: cidade.latitude,
-        longitude: cidade.longitude,
-      };
-    });
+        if (!cidade) {
+          throw new Error(`Cidade não encontrada: ${nomeCidade}`);
+        }
+
+        return {
+          nome: cidade.nome,
+          latitude: cidade.latitude,
+          longitude: cidade.longitude,
+        };
+      });
+    };
+
+    const melhorRota = {
+      caminho: converterCaminho(melhorRotaBruta.caminho),
+      custoTotal: Number(melhorRotaBruta.custoTotal.toFixed(2)),
+      distanciaTotal: Number(melhorRotaBruta.distanciaTotal.toFixed(2)),
+      tempoTotal: Number(melhorRotaBruta.tempoTotal.toFixed(2)),
+    };
+
+    const rotasPossiveis = rotasPossiveisBrutas.map((rota) => ({
+      caminho: converterCaminho(rota.caminho),
+      custoTotal: Number(rota.custoTotal.toFixed(2)),
+      distanciaTotal: Number(rota.distanciaTotal.toFixed(2)),
+      tempoTotal: Number(rota.tempoTotal.toFixed(2)),
+    }));
 
     return res.json({
-      caminho,
-      custoTotal: Number(
-        resultado.custoTotal.toFixed(2)
-      ),
-      distanciaTotal: Number(
-        resultado.distanciaTotal.toFixed(2)
-      ),
-      tempoTotal: Number(
-        resultado.tempoTotal.toFixed(2)
-      ),
+      melhorRota,
+      rotasPossiveis,
     });
   } catch (error) {
     console.error(error);
