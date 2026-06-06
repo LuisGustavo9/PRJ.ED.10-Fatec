@@ -241,6 +241,63 @@ main > * {
   font-weight: 600;
 }
 
+/* ========================= */
+/* Popup das rotas */
+/* ========================= */
+
+.route-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+}
+
+.route-popup .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.popup-card {
+  min-width: 250px;
+  padding: 16px;
+  background: white;
+  font-family: inherit;
+}
+
+.popup-card h3 {
+  margin: 0 0 12px;
+  color: #5b21b6;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.popup-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.popup-row span {
+  color: #666;
+}
+
+.popup-row strong {
+  color: #111;
+}
+
+.popup-card hr {
+  margin: 12px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+.popup-route {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #374151;
+  font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 980px) {
   body {

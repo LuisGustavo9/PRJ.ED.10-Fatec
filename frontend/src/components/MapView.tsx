@@ -20,7 +20,7 @@ export function MapView({ rota, rotasPossiveis }: Props) {
 
   const pontosMelhorRota =
     rota?.caminho.map(
-      (cidade) => [cidade.latitude, cidade.longitude] as [number, number]
+      (cidade) => [cidade.latitude, cidade.longitude] as [number, number],
     ) ?? [];
 
   return (
@@ -38,14 +38,49 @@ export function MapView({ rota, rotasPossiveis }: Props) {
         <Polyline
           key={`rota-vermelha-${index}`}
           positions={rotaPossivel.caminho.map(
-            (cidade) => [cidade.latitude, cidade.longitude] as [number, number]
+            (cidade) => [cidade.latitude, cidade.longitude] as [number, number],
           )}
           pathOptions={{
             color: "#ef4444",
             weight: 3,
             opacity: 0.35,
           }}
-        />
+        >
+          <Popup>
+            <div className="route-popup">
+              <div className="popup-header">✈️ Rota Alternativa</div>
+
+              <div className="popup-body">
+                <p>
+                  <strong>Caminho:</strong>
+                </p>
+
+                <p>
+                  {rotaPossivel.caminho
+                    .map((cidade) => cidade.nome)
+                    .join(" → ")}
+                </p>
+
+                <hr />
+
+                <p>
+                  <strong>💰 Custo:</strong> R${" "}
+                  {rotaPossivel.custoTotal.toFixed(2)}
+                </p>
+
+                <p>
+                  <strong>📏 Distância:</strong>{" "}
+                  {rotaPossivel.distanciaTotal.toFixed(2)} km
+                </p>
+
+                <p>
+                  <strong>⏱ Tempo:</strong> {rotaPossivel.tempoTotal.toFixed(0)}{" "}
+                  min
+                </p>
+              </div>
+            </div>
+          </Popup>
+        </Polyline>
       ))}
 
       {pontosMelhorRota.length > 1 && (
